@@ -2,7 +2,7 @@
 
 These are a set of bash scripts for building and running PHP 7 (CLI and FPM) on Debian based Linux distributions:
 
-- `build.sh` installs the necessary build dependencies and the latest development version of PHP with CLI and FPM server APIs (SAPI) from the latest PHP 7 branch of https://github.com/php/php-src
+- `build.sh` installs the necessary build dependencies and the latest stable version of PHP with CLI and FPM server APIs (SAPI) from the latest PHP 7 branch of https://github.com/php/php-src.
 
 - `install.sh` sets up PHP-FPM by moving configuration files into their correct locations in `/usr/local/php7` and enables the `php7-fpm` service and adds it to the startup sequence.
 
@@ -18,6 +18,12 @@ Please note that these are very simple scripts that don't implement error checki
 	$ ./build.sh
 	$ sudo ./install.sh
 
+On systems with little amount of RAM such as Raspberry Pi you might want to decrease the number of parallel `make` jobs by passing the `JOB_COUNT` variable:
+
+	$ JOB_COUNT=1 ./build.sh
+
+The default job count is equal to the number of CPU cores.
+
 The PHP-FPM can be operated using the `php7-fpm` init script:
 
 	Usage: /etc/init.d/php7-fpm {start|stop|status|restart|reload|force-reload}
@@ -26,13 +32,11 @@ while the FPM socket is available at
 
 	127.0.0.1:9007
 
-and PHP CLI:
+and PHP CLI at `/usr/local/php7/bin/php`.
 
-	$ /usr/local/php7/bin/php -v
-	PHP 7.0.13 (cli) (built: Jan  6 2016 01:17:03) ( NTS )
-	Copyright (c) 1997-2015 The PHP Group
-	Zend Engine v3.0.0, Copyright (c) 1998-2015 Zend Technologies
-	    with Zend OPcache v7.0.6-dev, Copyright (c) 1999-2015, by Zend Technologies
+### Updating
+
+Pull down the latest changes from this repository `git pull` and run `./build.sh`.
 
 
 ## Configuration files
@@ -51,7 +55,7 @@ while the Debian init script is added to:
 
 ## Extensions
 
-Note that most of the third-party PHP extensions are [not yet compatible with PHP 7](https://github.com/gophp7/gophp7-ext/wiki/extensions-catalog) and [GoPHP7-ext](http://gophp7.org/) (also on [GitHub](https://github.com/gophp7/gophp7-ext)) is a project to help do that. Here is a list of PHP modules that are enabled by default in this build:
+Here is a list of PHP modules that are enabled by default in this build:
 
 	$ /usr/local/php7/bin/php -m
 	[PHP Modules]
@@ -76,8 +80,6 @@ Note that most of the third-party PHP extensions are [not yet compatible with PH
 	json
 	libxml
 	mbstring
-	mcrypt
-	mhash
 	mysqli
 	mysqlnd
 	openssl
@@ -134,6 +136,6 @@ Please note that you need to restart `php7-fpm` to activate the extension.
 
 ## Credits
 
-- Created by [Kaspars Dambis](http://kaspars.net)
+- Created by [Kaspars Dambis](https://kaspars.net)
 - Contributors: [Piotr Plenik](https://github.com/jupeter)
 - Based on [`php7.sh`](https://gist.github.com/tvlooy/953a7c0658e70b573ab4) by [Tom Van Looy](http://www.intracto.com/nl/blog/running-symfony2-on-php7)
